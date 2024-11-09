@@ -1,6 +1,11 @@
+from flask import Flask, render_template, request
 import pandas as pd
 from datetime import datetime
-import sys
+from datetime import timedelta
+
+app = Flask(__name__)
+
+
 
 def calculate_working_hours(df):
     # Convert 'Log Date' to datetime
@@ -10,53 +15,66 @@ def calculate_working_hours(df):
     df['Date'] = df['Log Date'].dt.date
     df['Time'] = df['Log Date'].dt.time
 
-    # Group by Date to find in/out times
+    # Group by Date to find punch-in and punch-out times
     results = []
     for date, group in df.groupby('Date'):
-        # Sorting times to identify first (log-in) and last (log-out) of the day
+        # Sorting times to identify first (punch-in) and last (punch-out) of the day
         group = group.sort_values(by='Log Date')
-        log_in_time = group.iloc[0]['Log Date']
-        log_out_time = group.iloc[-1]['Log Date']
+        punch_in_time = group.iloc[0]['Log Date']
+        punch_out_time = group.iloc[-1]['Log Date']
         
-        # Calculate hours worked
-        hours_worked = (log_out_time - log_in_time).total_seconds() / 3600
+        # Calculate hours worked (in decimal)
+        hours_worked_seconds = (punch_out_time - punch_in_time).total_seconds()
+        hours_worked = hours_worked_seconds / 3600
         
-        results.append({"Date": date, "Log In": log_in_time.time(), "Log Out": log_out_time.time(), "Hours Worked": hours_worked})
+        # Convert hours worked to HH:MM format
+        hours_rounded = timedelta(seconds=hours_worked_seconds)
+        hours_minutes = str(hours_rounded)  # 'HH:MM:SS' format
+        hours_mm = hours_minutes.split(":")[:2]  # We only need hours and minutes
+        
+        results.append({
+            "Date": date,
+            "Punch In": punch_in_time.time(),
+            "Punch Out": punch_out_time.time(),
+            "Hours Worked (HH:MM)": f"{hours_mm[0]}:{hours_mm[1]}",
+            "Hours Worked (Decimal)": hours_worked  # Keep the decimal hours for total calculation
+        })
 
     # Create a DataFrame for results
     results_df = pd.DataFrame(results)
-    total_hours = results_df["Hours Worked"].sum()
+    total_hours = results_df["Hours Worked (Decimal)"].sum()
 
     return results_df, total_hours
 
-def parse_input():
-    # Read input as a block
-    print("Paste your table input below (end with an empty line):")
-    data = []
-    is_header = True
-    while True:
-        line = sys.stdin.readline().strip()
-        if line == "":
-            break
-        if is_header:
-            # Skip the header
-            is_header = False
-            continue
-        parts = line.split("\t")
-        if len(parts) == 3:
-            data.append(parts)
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        # Get the data input from the user
+        input_data = request.form['input_data']
+        
+        # Parse input data into DataFrame
+        data = []
+        lines = input_data.strip().split("\n")
+        
+        # Skip the header line by starting from the second line
+        for line in lines[1:]:  # Skip the first line (header)
+            parts = line.split("\t")
+            if len(parts) == 3:
+                data.append(parts)
+        
+        # Check if data is not empty before creating a DataFrame
+        if data:
+            df = pd.DataFrame(data, columns=["Emp_nmbr", "Log Date", "Device id"])
+            df['Emp_nmbr'] = df['Emp_nmbr'].astype(int)  # Convert Employee number to integer
+            
+            # Calculate working hours
+            results_df, total_hours = calculate_working_hours(df)
+            return render_template('index.html', results=results_df.to_html(classes='table table-striped'), total_hours=total_hours)
+        else:
+            return render_template('index.html', error="No valid data entered.")
+    
+    return render_template('index.html')
 
-    # Create DataFrame from parsed data
-    df = pd.DataFrame(data, columns=["Emp_nmbr", "Log Date", "Device id"])
-    df['Emp_nmbr'] = df['Emp_nmbr'].astype(int)  # Convert Employee number to integer
-    return df
 
-# Get input and process
-logs_df = parse_input()
-if not logs_df.empty:
-    results_df, total_hours = calculate_working_hours(logs_df)
-    print("\nDaily Work Hours:")
-    print(results_df)
-    print(f"\nTotal Working Hours in the Week: {total_hours:.2f} hours")
-else:
-    print("No data entered.")
+if __name__ == '__main__':
+    app.run(debug=True)
