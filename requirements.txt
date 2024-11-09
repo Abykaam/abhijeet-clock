@@ -1,2 +1,4 @@
 Flask
-Guricorn
+numpy
+pandas
+Gunicorn
