@@ -23,8 +23,8 @@
         <div class="table-responsive">
             {{ results | safe }}
         </div>
-        <h3>Total Working Hours in the Week: {{ total_hours_hhmm }} ({{ total_hours | round(2) }} hours)</h3>
-        <!-- <h3>Total Working Hours in the Week: {{ total_hours_hhmm }} </h3> -->
+        <h3>Total Working Hours:{{ total_hours_hhmmss }} ({{ total_hours_decimal | round(2) }} hours)</h3>
+        <!-- <p>Total Working Hours: <strong>HH:MM:SS Format:</strong> {{ total_hours_hhmmss }} (<strong>Decimal Format:</strong> {{ total_hours_decimal | round(2) }} hours)</p>         -->
         {% elif error %}
         <div class="alert alert-danger mt-3">
             {{ error }}
