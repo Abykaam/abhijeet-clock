@@ -40,7 +40,7 @@ def calculate_working_hours(df):
     # Create a DataFrame for results
     results_df = pd.DataFrame(results)
     
-    # Convert total seconds worked to HH:MM:SS without days
+    # Convert total 
     hours = total_seconds_worked // 3600
     minutes = (total_seconds_worked % 3600) // 60
     seconds = int(total_seconds_worked % 60)
