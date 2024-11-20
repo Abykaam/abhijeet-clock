@@ -12,6 +12,8 @@ def calculate_working_hours(df):
     df['Date'] = df['Log Date'].dt.date
     df['Time'] = df['Log Date'].dt.time
 
+    hours_worked = 0
+
     # Group by Date to find punch-in and punch-out times
     results = []
     for date, group in df.groupby('Date'):
@@ -22,7 +24,7 @@ def calculate_working_hours(df):
         
         # Calculate hours worked (in decimal)
         hours_worked_seconds = (punch_out_time - punch_in_time).total_seconds()
-        hours_worked = hours_worked_seconds / 3600
+        hours_worked += hours_worked_seconds / 3600
         
         # Convert hours worked to HH:MM format
         hours_rounded = timedelta(seconds=hours_worked_seconds)
@@ -33,15 +35,22 @@ def calculate_working_hours(df):
             "Date": date,
             "Punch In": punch_in_time.time(),
             "Punch Out": punch_out_time.time(),
-            "Hours Worked (HH:MM)": f"{hours_mm[0]}:{hours_mm[1]}",
-            "Hours Worked (Decimal)": hours_worked  # Keep the decimal hours for total calculation
+            "Hours Worked (HH:MM)": f"{hours_mm[0]} Hours:{hours_mm[1]} Minutes ",
+            # "Hours Worked (Decimal)": hours_worked  # Keep the decimal hours for total calculation
         })
 
     # Create a DataFrame for results
     results_df = pd.DataFrame(results)
-    total_hours = results_df["Hours Worked (Decimal)"].sum()
+    total_hours = hours_worked
 
-    return results_df, total_hours
+    
+    # Convert total hours to HH:MM format
+    total_seconds = int(total_hours * 3600)  # Convert decimal hours to seconds
+    total_hours_formatted = divmod(total_seconds, 3600)  # (hours, remainder_seconds)
+    total_minutes = divmod(total_hours_formatted[1], 60)  # (minutes, seconds)
+    total_hours_hhmm = f"{total_hours_formatted[0]} Hours:{total_minutes[0]:02d} Minutes"
+
+    return results_df, total_hours, total_hours_hhmm
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -66,8 +75,13 @@ def index():
             df['Emp_nmbr'] = df['Emp_nmbr'].astype(int)  # Convert Employee number to integer if necessary
             
             # Calculate working hours
-            results_df, total_hours = calculate_working_hours(df)
-            return render_template('index.html', results=results_df.to_html(classes='table table-striped'), total_hours=total_hours)
+            results_df, total_hours, total_hours_hhmm = calculate_working_hours(df)
+            return render_template(
+                'index.html',
+                results=results_df.to_html(classes='table table-striped'),
+                total_hours=total_hours,
+                total_hours_hhmm=total_hours_hhmm
+            )
         else:
             return render_template('index.html', error="No valid data entered.")
     
