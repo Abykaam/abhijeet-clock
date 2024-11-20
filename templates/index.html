@@ -6,6 +6,18 @@
     <title>Working Hours Calculator</title>
     <!-- Link to the CSS file -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        // Scroll to the results section if results are displayed
+        window.onload = function() {
+            // Check if results are present (use the id 'results-section')
+            if (document.getElementById("results-section")) {
+                // Scroll to the results section
+                document.getElementById("results-section").scrollIntoView({
+                    behavior: "smooth"
+                });
+            }
+        };
+    </script>
 </head>
 <body>
     <div class="container">
@@ -19,10 +31,11 @@
         </form>
 
         {% if results %}
-        <h3>Daily Work Hours:</h3>
-        <div class="table-responsive">
-            {{ results | safe }}
-        </div>
+        <div id="results-section">
+            <h3>Daily Work Hours:</h3>
+            <div class="table-responsive">
+                {{ results | safe }}
+            </div>
         <h3>Total Working Hours:{{ total_hours_hhmmss }} ({{ total_hours_decimal | round(2) }} hours)</h3>
         <!-- <p>Total Working Hours: <strong>HH:MM:SS Format:</strong> {{ total_hours_hhmmss }} (<strong>Decimal Format:</strong> {{ total_hours_decimal | round(2) }} hours)</p>         -->
         {% elif error %}
