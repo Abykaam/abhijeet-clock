@@ -1,11 +1,8 @@
 from flask import Flask, render_template, request
 import pandas as pd
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
-
-
 
 def calculate_working_hours(df):
     # Convert 'Log Date' to datetime
@@ -56,16 +53,17 @@ def index():
         data = []
         lines = input_data.strip().split("\n")
         
-        # Skip the header line by starting from the second line
-        for line in lines[1:]:  # Skip the first line (header)
+        # Automatically set the header
+        header = ["Emp_nmbr", "Log Date", "Device id"]
+        for line in lines:
             parts = line.split("\t")
-            if len(parts) == 3:
+            if len(parts) == len(header):
                 data.append(parts)
         
         # Check if data is not empty before creating a DataFrame
         if data:
-            df = pd.DataFrame(data, columns=["Emp_nmbr", "Log Date", "Device id"])
-            df['Emp_nmbr'] = df['Emp_nmbr'].astype(int)  # Convert Employee number to integer
+            df = pd.DataFrame(data, columns=header)
+            df['Emp_nmbr'] = df['Emp_nmbr'].astype(int)  # Convert Employee number to integer if necessary
             
             # Calculate working hours
             results_df, total_hours = calculate_working_hours(df)
@@ -74,7 +72,6 @@ def index():
             return render_template('index.html', error="No valid data entered.")
     
     return render_template('index.html')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
