@@ -6,8 +6,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Working Hours Calculator</title>
-    <!-- Link to the CSS file -->
+    <!-- Link to the Bootstrap CSS file (CDN) -->
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS for the smaller counter card */
+        .counter-card {
+            width: 200px; /* Set the width of the card */
+            margin: 0 auto; /* Center the card */
+            text-align: center; /* Center the text */
+            font-size: 0.5rem;
+            background-color: grey;
+            /* height: 50px; Adjust font size for the card content */
+        }
+        .counter-card .card-body {
+            padding: 4px; /* Adjust padding within the card */
+        }
+        .counter-card .card-title {
+            font-size: 0.75rem;
+            margin-bottom: 0px; /* Slightly smaller title font */
+        }
+        .counter-card .card-text {
+            font-size: 2rem; /* Make the counter number slightly bigger */
+        }
+    </style>
     <script>
         // Scroll to the results section if results are displayed
         window.onload = function() {
@@ -42,13 +64,12 @@ Sample input for punch record is shown below:
         </form>
 
         {% if results %}
-        <div id="results-section">
+        <div id="results-section" class="mt-4">
             <h3>Daily Work Hours:</h3>
             <div class="table-responsive">
                 {{ results | safe }}
             </div>
         <h3>Total Working Hours:{{ total_hours_hhmmss }} ({{ total_hours_decimal | round(2) }} hours)</h3>
-        <!-- <p>Total Working Hours: <strong>HH:MM:SS Format:</strong> {{ total_hours_hhmmss }} (<strong>Decimal Format:</strong> {{ total_hours_decimal | round(2) }} hours)</p>         -->
         <h3>Total Policy Duration:{{ total_policy_hours_hhmmss }} ({{ total_policy_hours_decimal }} hours)</h3>
 
         {% elif error %}
@@ -57,8 +78,23 @@ Sample input for punch record is shown below:
         </div>
         {% endif %}
     </div>
-    <footer style="text-align: center; padding: 10px; margin-top: 20px; background-color: #f4f4f4; max-width: 800px; margin-left: auto; margin-right: auto;">
-        <p style="display: inline;">© 2024 Abhijeet Yadav. All Rights Reserved.</p>
+
+    <footer class="bg-light py-3 text-center">
+        <p>© 2024 Abhijeet Yadav. All Rights Reserved.</p>
+                <!-- Card Component for the Total Visits with custom class for smaller size -->
+                <div class="card text-white counter-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Website Visits</h5>
+                        <p class="card-text">
+                            {{ total_visits }}
+                        </p>
+                    </div>
+                </div>
     </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

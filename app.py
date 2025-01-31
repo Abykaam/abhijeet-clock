@@ -4,6 +4,25 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
+# Global variable to store the total number of visits
+total_visits = 0
+
+# Load total visits from a file or database
+def load_total_visits():
+    global total_visits
+    try:
+        with open('total_visits.txt', 'r') as f:
+            total_visits = int(f.read())
+    except FileNotFoundError:
+        total_visits = 0
+
+# Save total visits to a file
+def save_total_visits():
+    global total_visits
+    with open('total_visits.txt', 'w') as f:
+        f.write(str(total_visits))
+
+# Helper functions to format time and calculate working hours (same as before)
 def format_timedelta(seconds):
     """Formats total seconds into HH:MM:SS format, even if exceeding 24 hours."""
     hours = seconds // 3600
@@ -54,6 +73,12 @@ def calculate_working_hours(df):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    global total_visits
+
+    # Increase the visit count every time the page is loaded
+    total_visits += 1
+    save_total_visits()
+
     if request.method == 'POST':
         input_data = request.form['input_data']
 
@@ -81,12 +106,14 @@ def index():
                 total_hours_decimal=total_hours_decimal,
                 total_hours_hhmmss=total_hours_hhmmss,
                 total_policy_hours_decimal=total_policy_hours_decimal,
-                total_policy_hours_hhmmss=total_policy_hours_hhmmss
+                total_policy_hours_hhmmss=total_policy_hours_hhmmss,
+                total_visits=total_visits
             )
         else:
-            return render_template('index.html', error="No valid data entered.")
+            return render_template('index.html', error="No valid data entered.", total_visits=total_visits)
     
-    return render_template('index.html')
+    return render_template('index.html', total_visits=total_visits)
 
 if __name__ == '__main__':
+    load_total_visits()  # Load total visits from the file
     app.run(debug=True)
