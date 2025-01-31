@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4960982053036085"
+     crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Working Hours Calculator</title>
@@ -47,6 +49,8 @@ Sample input for punch record is shown below:
             </div>
         <h3>Total Working Hours:{{ total_hours_hhmmss }} ({{ total_hours_decimal | round(2) }} hours)</h3>
         <!-- <p>Total Working Hours: <strong>HH:MM:SS Format:</strong> {{ total_hours_hhmmss }} (<strong>Decimal Format:</strong> {{ total_hours_decimal | round(2) }} hours)</p>         -->
+        <h3>Total Policy Duration:{{ total_policy_hours_hhmmss }} ({{ total_policy_hours_decimal }} hours)</h3>
+
         {% elif error %}
         <div class="alert alert-danger mt-3">
             {{ error }}
