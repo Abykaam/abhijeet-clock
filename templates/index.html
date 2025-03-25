@@ -73,7 +73,7 @@ Sample input for punch record is shown below:
 
         {% if results %}
         <div id="results-section" class="mt-4">
-            <h3>Daily Work Hours:</h3>
+            <h3>Daily Work Hours:</h3>       
             <div class="table-responsive">
                 {{ results | safe }}
             </div>
@@ -86,6 +86,16 @@ Sample input for punch record is shown below:
         </div>
         {% endif %}
     </div>
+    <div class="container mt-3">
+        <div class="alert alert-primary text-center shadow-lg" role="alert">
+            ✍️ Want to share your thoughts? <strong>Write a blog on our platform!</strong>  
+            <br>
+            <a href="https://everydayblog.onrender.com" target="_blank" class="btn btn-dark mt-2">
+                Visit Our Blogging Website
+            </a>
+        </div>
+    </div>
+
 
     <footer class="bg-light py-3 text-center">
         <p>© 2024 Abhijeet Yadav. All Rights Reserved.</p>
@@ -104,5 +114,34 @@ Sample input for punch record is shown below:
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Bootstrap Modal (Popup) -->
+    <div class="modal fade" id="blogPopup" tabindex="-1" role="dialog" aria-labelledby="blogPopupLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="blogPopupLabel">✍️ Write a Blog on Our Platform!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>Share your thoughts with the world! Write a blog and showcase your ideas.</p>
+                    <a href="https://yourblogsite.com" target="_blank" class="btn btn-primary">Visit Blogging Website</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript to Show Popup Instantly -->
+    <script>
+        $(document).ready(function(){
+            $('#blogPopup').modal('show'); // Show the modal immediately when page loads
+        });
+    </script>
+
+    <!-- Bootstrap JS (if not already included) -->
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+
 </body>
 </html>
