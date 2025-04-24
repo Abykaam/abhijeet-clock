@@ -70,7 +70,20 @@ Sample input for punch record is shown below:
             <button type="submit" class="btn btn-primary">Submit</button>
             <br>
         </form>
+        <!-- Display the alert after form submission -->
+        {% if form_submitted %}
+        <div class="container mt-3">
+            <div class="alert alert-primary text-center shadow-lg" role="alert">
+                <strong>😎 🎭Tap to talk to someone new.</strong>  
+                <br>
+                <a href="https://blindmeet.onrender.com" target="_blank" class="btn btn-dark mt-2">
+                    Visit Website
+                </a>
+            </div>
+        </div>
+        {% endif %}
 
+    
         {% if results %}
         <div id="results-section" class="mt-4">
             <h3>Daily Work Hours:</h3>       
@@ -78,7 +91,7 @@ Sample input for punch record is shown below:
                 {{ results | safe }}
             </div>
         <h3>Total Working Hours:{{ total_hours_hhmmss }} ({{ total_hours_decimal | round(2) }} hours)</h3>
-        <h3>Total Policy Duration:{{ total_policy_hours_hhmmss }} ({{ total_policy_hours_decimal }} hours)</h3>
+        <h3>Total Policy Duration:{{ total_policy_hours_hhmmss }} ({{ total_policy_hours_decimal }} hours)</h3>      
 
         {% elif error %}
         <div class="alert alert-danger mt-3">
@@ -86,15 +99,15 @@ Sample input for punch record is shown below:
         </div>
         {% endif %}
     </div>
-    <!-- <div class="container mt-3">
+    <div class="container mt-3">
         <div class="alert alert-primary text-center shadow-lg" role="alert">
-            ✍️ Want to share your thoughts? <strong>Write a blog on our platform!</strong>  
+            <strong>😎 🎭Tap to talk to someone new.</strong>  
             <br>
-            <a href="https://everydayblog.onrender.com" target="_blank" class="btn btn-dark mt-2">
-                Visit Our Blogging Website
+            <a href="https://blindmeet.onrender.com" target="_blank" class="btn btn-dark mt-2">
+                Visit Website
             </a>
         </div>
-    </div> -->
+    </div>
 
 
     <footer class="bg-light py-3 text-center">
@@ -115,22 +128,25 @@ Sample input for punch record is shown below:
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- Bootstrap Modal (Popup) -->
-    <!-- <div class="modal fade" id="blogPopup" tabindex="-1" role="dialog" aria-labelledby="blogPopupLabel" aria-hidden="true">
+    <div class="modal fade" id="blogPopup" tabindex="-1" role="dialog" aria-labelledby="blogPopupLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="blogPopupLabel">✍️ Write a Blog on Our Platform!</h5>
+                    <h5 class="modal-title text-nowrap" id="blogPopupLabel" style="white-space: nowrap;">
+                        ✍️ Ready to meet someone new?
+                    </h5>                  
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body text-center">
-                    <p>Share your thoughts with the world! Write a blog and showcase your ideas.</p>
-                    <a href="https://everydayblog.onrender.com" target="_blank" class="btn btn-primary">Visit Blogging Website</a>
+                    <p>Spin the chat wheel and see who you meet!</p>
+                    <a href="https://blindmeet.onrender.com" target="_blank" class="btn btn-primary">Visit Website</a>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
+    
 
     <!-- JavaScript to Show Popup Instantly -->
     <script>
