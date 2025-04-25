@@ -108,10 +108,10 @@ button:hover {
 }
 
 /* Adjust margin-top for the alert container specifically */
-.container.mt-3 {
-    margin-top: 0px !important; /* Reduce margin to zero */
+/* .container.mt-3 {
+    margin-top: 0px !important;
 }
 
 .container.mt-3 .alert {
-    margin-top: -10px !important; /* Move the alert box up closer */
-}
+    margin-top: -10px !important; 
+} */
